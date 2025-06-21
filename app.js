@@ -98,12 +98,6 @@ const store = MongoStore.create({
     ssl: process.env.NODE_ENV === "production",
     retryWrites: true,
     w: "majority",
-    serverSelectionTimeoutMS: 10000,
-    socketTimeoutMS: 45000,
-    connectTimeoutMS: 10000,
-    maxPoolSize: 10,
-    minPoolSize: 1,
-    tlsAllowInvalidCertificates: process.env.NODE_ENV === "production",
   },
   secret,
   touchAfter: 24 * 60 * 60, //time period in seconds
@@ -118,7 +112,7 @@ const sessionConfig = {
   name: "session", //since we dont want the default name 'connect.sid' which people can directly get to know so we put our own name it could be anything we are just changing name not hiding it
   secret,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     httpOnly: true, //these are little security features we can refer to docs to know more
     secure: process.env.NODE_ENV === "production", // enabling this will make cookie work only on https and since localhost is not https cookies will not work on localhost but we definitely want this while deploying
@@ -127,8 +121,7 @@ const sessionConfig = {
       process.env.NODE_ENV === "production"
         ? new URL(CLIENT_URL).hostname
         : undefined, // set domain for production
-    express: Date.now() + 1000 * 60 * 60 * 24 * 7, //setting to expire in 7 days in millisecondss
-    maxAge: 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7, //setting to expire in 7 days in milliseconds
   },
 };
 app.use(session(sessionConfig));
