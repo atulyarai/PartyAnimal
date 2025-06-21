@@ -26,7 +26,7 @@ const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
-const MongoDBStore = require("connect-mongo")(session);
+const MongoStore = require("connect-mongo");
 
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/party-animal";
 
@@ -94,7 +94,7 @@ const CLIENT_URL =
     ? "https://partyanimal.onrender.com"
     : "http://localhost:3000");
 
-const store = new MongoDBStore({
+const store = MongoStore.create({
   //configuring mongoStore for session's storage
   mongoUrl: dbUrl,
   mongoOptions: mongooseOptions,
