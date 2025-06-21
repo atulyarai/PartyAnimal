@@ -7,7 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
-  "keywords": ["events", "parties", "local", "social"],
+  "keywords": [
+    "events",
+    "parties",
+    "local",
+    "social"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

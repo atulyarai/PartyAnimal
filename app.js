@@ -26,7 +26,7 @@ const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
-const MongoStore = require("connect-mongo")(session);
+const MongoStore = require("connect-mongo");
 
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/party-animal";
 
@@ -92,8 +92,7 @@ const CLIENT_URL =
     ? "https://partyanimal.onrender.com"
     : "http://localhost:3000");
 
-const store = new MongoStore({
-  //configuring mongoStore for session's storage
+const store = MongoStore.create({
   mongoUrl: dbUrl,
   mongoOptions: {
     ssl: process.env.NODE_ENV === "production",
@@ -134,7 +133,23 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig));
 app.use(flash());
-app.use(helmet()); //this will automatically enable all 11 middleware defined in it see docs- https://helmetjs.github.io/ one of those is contentPolicysECURITY WILL WILL CREATE SOME PROBLEM currently so disabling it for now
+app.use(helmet());
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport configuration
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Ensure this is BEFORE any routes
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  res.locals.CLIENT_URL = CLIENT_URL;
+  next();
+});
 
 const scriptSrcUrls = [
   "https://stackpath.bootstrapcdn.com/",
@@ -193,22 +208,6 @@ app.use(
     },
   })
 );
-
-app.use(passport.initialize());
-app.use(passport.session()); // session should be used before passport.session , we are using this sinc we dont want user to login on every request it will remember
-passport.use(new LocalStrategy(User.authenticate())); //we kind of asking passport to use localStrategy that we have downloded in require and for that LocalStrategy the authentication method is going to be located on our user model and its called authenticate (which is a static method comming from the passport local mongoose)
-
-passport.serializeUser(User.serializeUser()); //this is telling passport how to serialize a user which is basically how do we store user in the session
-passport.deserializeUser(User.deserializeUser()); //how to get user out of session
-
-app.use((req, res, next) => {
-  //console.log(req.session);
-  res.locals.currentUser = req.user;
-  res.locals.success = req.flash("success"); //setting up this middleware before any routes , setting res.locals.session to whatever is there in flash success so that we have access to it everywhere
-  res.locals.error = req.flash("error");
-  res.locals.CLIENT_URL = CLIENT_URL; // make CLIENT_URL available in views
-  next();
-});
 
 app.use("/", userRoutes);
 app.use("/events", campgroundRoutes); //inside events routes all routes starting from /events.
