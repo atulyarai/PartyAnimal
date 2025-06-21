@@ -64,16 +64,17 @@ PartyAnimal/
 ## Screenshots
 
 > HomePage
-> ![home](https://user-images.githubusercontent.com/51289274/113733448-1a3ac300-9718-11eb-9fc7-defb8d2cd9c1.png)
+> ![image](https://github.com/user-attachments/assets/ee03df3c-4af4-4bae-a7b5-ae84a111ac8f)
 
 > All Events
-> ![All campgrounds](https://user-images.githubusercontent.com/51289274/113733438-173fd280-9718-11eb-8a0d-8e13f1ab3d45.png)
+> ![image](https://github.com/user-attachments/assets/5eddcc75-f9bf-431e-b2e3-1938ac7bc03c)
 
 > Single Event ShowPage
 > ![showPage](https://user-images.githubusercontent.com/51289274/113733465-1e66e080-9718-11eb-9ffe-8b047640942a.png)
 
 > Login & Register page
-> ![login,register](https://user-images.githubusercontent.com/51289274/113734300-d8f6e300-9718-11eb-801e-5cb4698a1560.png)
+> ![image](https://github.com/user-attachments/assets/2f8e6baa-eac0-4d9e-a0c7-f469329a1ae2)
+
 
 ## License
 
