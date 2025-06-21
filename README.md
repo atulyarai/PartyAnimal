@@ -57,11 +57,22 @@ For production deployment, you need to set the following environment variables:
 - `NODE_ENV`: Set to "production" for production deployment
 - `CLIENT_URL`: Your production domain URL (e.g., "https://your-app.herokuapp.com")
 
+### Render Deployment
+
+For deploying on Render:
+
+1. **Environment Variables**: Set all the above environment variables in your Render service settings
+2. **Build Command**: `npm install`
+3. **Start Command**: `npm start`
+4. **MongoDB Atlas**: Make sure your MongoDB Atlas cluster allows connections from all IP addresses (0.0.0.0/0) or specifically from Render's IP ranges
+
 ### Important Notes
 
 - The `CLIENT_URL` environment variable is required for production to ensure proper session cookie configuration and security headers
 - Make sure to set `NODE_ENV=production` in your production environment
-- Copy `env.example` to `.env` and fill in your actual values for local development
+- Copy `env.template` to `.env` and fill in your actual values for local development
+- For MongoDB Atlas on Render, SSL validation is disabled to handle connection issues
+- The application includes automatic connection retry logic for MongoDB
 
 ## Screenshots
 

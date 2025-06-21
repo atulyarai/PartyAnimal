@@ -29,10 +29,38 @@ const reviewRoutes = require("./routes/reviews");
 const MongoDBStore = require("connect-mongo")(session);
 
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/party-animal";
-mongoose.connect(dbUrl);
+
+// MongoDB connection options for production
+const mongooseOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  ssl: process.env.NODE_ENV === "production",
+  sslValidate: false, // Disable SSL validation for Render deployment
+  retryWrites: true,
+  w: "majority",
+  serverSelectionTimeoutMS: 10000,
+  socketTimeoutMS: 45000,
+  connectTimeoutMS: 10000,
+  maxPoolSize: 10,
+  minPoolSize: 1,
+};
+
+mongoose.connect(dbUrl, mongooseOptions).catch((err) => {
+  console.error("Initial MongoDB connection failed:", err);
+  // Retry connection after 5 seconds
+  setTimeout(() => {
+    console.log("Retrying MongoDB connection...");
+    mongoose.connect(dbUrl, mongooseOptions);
+  }, 5000);
+});
 
 const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
+db.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
+});
+db.on("disconnected", () => {
+  console.log("MongoDB disconnected");
+});
 db.once("open", () => {
   console.log("Database Connected!");
 });
@@ -62,12 +90,13 @@ const secret = process.env.SECRET || "thisshouldbeabettersecret!";
 const CLIENT_URL =
   process.env.CLIENT_URL ||
   (process.env.NODE_ENV === "production"
-    ? "https://your-domain.com"
+    ? "https://partyanimal.onrender.com"
     : "http://localhost:3000");
 
 const store = new MongoDBStore({
   //configuring mongoStore for session's storage
-  url: dbUrl,
+  mongoUrl: dbUrl,
+  mongoOptions: mongooseOptions,
   secret,
   touchAfter: 24 * 60 * 60, //time period in seconds
 });
