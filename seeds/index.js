@@ -7,7 +7,21 @@ const { descriptors, places } = require("./seedHelpers");
 require("dotenv").config();
 
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/party-animal";
-mongoose.connect(dbUrl);
+
+// MongoDB connection options for production
+const mongooseOptions = {
+  ssl: process.env.NODE_ENV === "production",
+  retryWrites: true,
+  w: "majority",
+  serverSelectionTimeoutMS: 10000,
+  socketTimeoutMS: 45000,
+  connectTimeoutMS: 10000,
+  maxPoolSize: 10,
+  minPoolSize: 1,
+  tlsAllowInvalidCertificates: process.env.NODE_ENV === "production",
+};
+
+mongoose.connect(dbUrl, mongooseOptions);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));

@@ -26,16 +26,13 @@ const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
-const MongoStore = require("connect-mongo");
+const MongoStore = require("connect-mongo")(session);
 
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/party-animal";
 
 // MongoDB connection options for production
 const mongooseOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   ssl: process.env.NODE_ENV === "production",
-  sslValidate: false, // Disable SSL validation for Render deployment
   retryWrites: true,
   w: "majority",
   serverSelectionTimeoutMS: 10000,
@@ -43,6 +40,7 @@ const mongooseOptions = {
   connectTimeoutMS: 10000,
   maxPoolSize: 10,
   minPoolSize: 1,
+  tlsAllowInvalidCertificates: process.env.NODE_ENV === "production",
 };
 
 // Connect to MongoDB
@@ -94,10 +92,20 @@ const CLIENT_URL =
     ? "https://partyanimal.onrender.com"
     : "http://localhost:3000");
 
-const store = MongoStore.create({
+const store = new MongoStore({
   //configuring mongoStore for session's storage
   mongoUrl: dbUrl,
-  mongoOptions: mongooseOptions,
+  mongoOptions: {
+    ssl: process.env.NODE_ENV === "production",
+    retryWrites: true,
+    w: "majority",
+    serverSelectionTimeoutMS: 10000,
+    socketTimeoutMS: 45000,
+    connectTimeoutMS: 10000,
+    maxPoolSize: 10,
+    minPoolSize: 1,
+    tlsAllowInvalidCertificates: process.env.NODE_ENV === "production",
+  },
   secret,
   touchAfter: 24 * 60 * 60, //time period in seconds
 });

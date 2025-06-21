@@ -73,7 +73,8 @@ For deploying on Render:
 - Copy `env.template` to `.env` and fill in your actual values for local development
 - For MongoDB Atlas on Render, SSL validation is disabled to handle connection issues
 - The application includes automatic connection retry logic for MongoDB
-- Uses `connect-mongo` v4.6.0 for session storage compatibility
+- Uses `connect-mongo` v5.1.0 for session storage compatibility
+- All MongoDB connection options have been updated for compatibility with Node.js v22 and newer MongoDB drivers
 
 ## Screenshots
 
