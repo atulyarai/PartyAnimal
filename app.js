@@ -45,6 +45,7 @@ const mongooseOptions = {
   minPoolSize: 1,
 };
 
+// Connect to MongoDB
 mongoose.connect(dbUrl, mongooseOptions).catch((err) => {
   console.error("Initial MongoDB connection failed:", err);
   // Retry connection after 5 seconds
