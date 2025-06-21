@@ -58,6 +58,13 @@ app.use(
 
 const secret = process.env.SECRET || "thisshouldbeabettersecret!";
 
+// Set up client URL for production
+const CLIENT_URL =
+  process.env.CLIENT_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://your-domain.com"
+    : "http://localhost:3000");
+
 const store = new MongoDBStore({
   //configuring mongoStore for session's storage
   url: dbUrl,
@@ -77,7 +84,12 @@ const sessionConfig = {
   saveUninitialized: true,
   cookie: {
     httpOnly: true, //these are little security features we can refer to docs to know more
-    // secure:true, // enabling this will make cookie work only on http and since localhost is not http cookies will not work on localhost but we definitely want this while deploying
+    secure: process.env.NODE_ENV === "production", // enabling this will make cookie work only on https and since localhost is not https cookies will not work on localhost but we definitely want this while deploying
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // for production cross-site requests
+    domain:
+      process.env.NODE_ENV === "production"
+        ? new URL(CLIENT_URL).hostname
+        : undefined, // set domain for production
     express: Date.now() + 1000 * 60 * 60 * 24 * 7, //setting to expire in 7 days in millisecondss
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
@@ -156,6 +168,7 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success"); //setting up this middleware before any routes , setting res.locals.session to whatever is there in flash success so that we have access to it everywhere
   res.locals.error = req.flash("error");
+  res.locals.CLIENT_URL = CLIENT_URL; // make CLIENT_URL available in views
   next();
 });
 

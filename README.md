@@ -43,6 +43,26 @@ This project is being created created using Node.js, Express, MongoDB, and Boots
 
 > AWS - mongodb is hosted on amazon ec2 instance
 
+## Deployment
+
+### Environment Variables
+
+For production deployment, you need to set the following environment variables:
+
+- `DB_URL`: Your MongoDB connection string
+- `SECRET`: A secure random string for session encryption
+- `CLOUDINARY_CLOUD_NAME`: Your Cloudinary cloud name
+- `CLOUDINARY_KEY`: Your Cloudinary API key
+- `CLOUDINARY_SECRET`: Your Cloudinary API secret
+- `NODE_ENV`: Set to "production" for production deployment
+- `CLIENT_URL`: Your production domain URL (e.g., "https://your-app.herokuapp.com")
+
+### Important Notes
+
+- The `CLIENT_URL` environment variable is required for production to ensure proper session cookie configuration and security headers
+- Make sure to set `NODE_ENV=production` in your production environment
+- Copy `env.example` to `.env` and fill in your actual values for local development
+
 ## Screenshots
 
 > HomePage
