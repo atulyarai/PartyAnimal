@@ -70,7 +70,7 @@ PartyAnimal/
 > ![image](https://github.com/user-attachments/assets/5eddcc75-f9bf-431e-b2e3-1938ac7bc03c)
 
 > Single Event ShowPage
-> ![showPage](https://user-images.githubusercontent.com/51289274/113733465-1e66e080-9718-11eb-9ffe-8b047640942a.png)
+> ![image](https://github.com/user-attachments/assets/1e9d7030-58bd-4524-9c5b-a348f702316c)
 
 > Login & Register page
 > ![image](https://github.com/user-attachments/assets/2f8e6baa-eac0-4d9e-a0c7-f469329a1ae2)
