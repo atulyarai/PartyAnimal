@@ -115,13 +115,17 @@ const sessionConfig = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true, //these are little security features we can refer to docs to know more
-    secure: process.env.NODE_ENV === "production", // enabling this will make cookie work only on https and since localhost is not https cookies will not work on localhost but we definitely want this while deploying
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // for production cross-site requests
-    domain:
-      process.env.NODE_ENV === "production"
-        ? new URL(CLIENT_URL).hostname
-        : undefined, // set domain for production
     maxAge: 1000 * 60 * 60 * 24 * 7, //setting to expire in 7 days in milliseconds
+    ...(process.env.NODE_ENV === "production"
+      ? {
+          secure: true, // Only true in production with HTTPS
+          sameSite: "none", // For cross-site cookies in production
+          domain: new URL(CLIENT_URL).hostname, // set domain for production
+        }
+      : {
+          secure: false, // Not secure in development
+          sameSite: "lax", // Lax for local development
+        }),
   },
 };
 app.use(session(sessionConfig));
